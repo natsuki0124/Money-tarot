@@ -8,10 +8,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-title" content="股海明燈">
-    <link rel="apple-touch-icon" href="icon.png">
-
     <script src="data.js"></script>
 
     <style>
@@ -64,22 +60,13 @@
             border-radius: 18px;
             margin-bottom: 35px;
             font-size: 0.95rem;
-            line-height: 1.8;
+            line-height: 2;
             color: #555;
             border: 1px solid rgba(184, 150, 46, 0.15);
+            /* 讓區塊整體置中，但文字內容靠左 */
             display: inline-block;
             text-align: left;
             max-width: 85%;
-        }
-
-        .disclaimer-text {
-            color: #888;
-            font-size: 0.8rem;
-            display: block;
-            margin-top: 12px;
-            line-height: 1.4;
-            border-top: 1px solid rgba(184, 150, 46, 0.1);
-            padding-top: 10px;
         }
 
         #startBtn {
@@ -155,7 +142,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
-            max-height: 65vh;
+            max-height: 62vh;
             background: rgba(255, 255, 255, 0.98);
             padding: 25px;
             border-radius: 25px;
@@ -181,23 +168,13 @@
             padding: 0 5px;
         }
 
-        .res-disclaimer {
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 20px;
-            text-align: center;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            line-height: 1.4;
-        }
-
         .close-btn {
             background: none; 
             border: 1px solid #ddd; 
             color: #999; 
             border-radius: 20px; 
             padding: 10px 30px; 
-            margin-top: 20px; 
+            margin-top: 25px; 
             font-size: 0.9rem;
             cursor: pointer;
         }
@@ -214,10 +191,7 @@
             <b>投資占卜須知：</b><br>
             1. 尋找安靜空間，深呼吸三次。<br>
             2. 鎖定您想詢問的標的或投資計畫。<br>
-            3. 準備好後點擊下方按鈕。<br>
-            <span class="disclaimer-text">
-                ⚠️ 免責聲明：本軟體僅供投資心態參考，不構成實際買賣建議，投資人應自行承擔盈虧風險。
-            </span>
+            3. 準備好後點擊下方按鈕，看見市場天機。
         </div>
         <br>
         <button id="startBtn" onclick="runCeremony()">開始占卜</button>
@@ -229,9 +203,6 @@
         <div class="res-title" id="resName"></div>
         <div class="res-pos" id="resPos"></div>
         <div id="resDesc"></div>
-        <div class="res-disclaimer">
-            ※ 本內容僅供投資心理參考，請務必審慎評估風險。
-        </div>
         <div style="text-align: center;">
             <button class="close-btn" onclick="location.reload()">重新占卜</button>
         </div>
@@ -292,4 +263,38 @@
                 const angle = startAngle - (i * step);
                 const rad = angle * Math.PI / 180;
                 const x = Math.cos(rad) * radius;
-                const y = -Math.sin(rad) * radius +
+                const y = -Math.sin(rad) * radius + 60;
+                const rotate = 90 - angle;
+                c.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+                c.onclick = () => selectCard(c);
+            });
+        }
+
+        function selectCard(card) {
+            if (card.classList.contains('flipped')) return;
+            
+            const isRev = Math.random() > 0.5;
+            const realIndex = card.dataset.realIndex; 
+            const data = tarotDeckData[realIndex];
+
+            cards.forEach(c => c.style.opacity = c === card ? '1' : '0.1');
+            card.style.zIndex = '2000';
+            
+            if (isRev) card.classList.add('reversed');
+            card.classList.add('flipped');
+            card.style.transform = `translate(0, -120px) scale(2.4) rotate(0deg)`;
+
+            setTimeout(() => {
+                document.getElementById('resName').innerText = data.n;
+                document.getElementById('resPos').innerText = isRev ? "── 逆位 ──" : "── 正位 ──";
+                // 台灣股市邏輯：正位(紅)漲、逆位(綠)跌
+                document.getElementById('resPos').style.color = isRev ? "#00a896" : "#e63946";
+                document.getElementById('resDesc').innerText = isRev ? data.r : data.u;
+                document.getElementById('result-panel').style.display = 'block';
+            }, 600);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
