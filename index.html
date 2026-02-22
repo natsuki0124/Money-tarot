@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>新春開運占卜</title>
+    <title>塔羅股海明燈</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-<link rel="manifest" href="manifest.json">
-
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="開運占卜">
-<meta name="theme-color" content="#c0392b">
+    <script src="data.js"></script>
 
     <style>
         :root {
             --gold: #b8962e; 
-            --red: #c0392b;
-            --bg: #fff5f5;   
+            --bg: #f8f9fa;   
             --card-w: 68px;
             --card-h: 115px;
         }
@@ -44,25 +39,45 @@
             z-index: 1500;
         }
 
-        h1 { color: var(--red); font-size: 2rem; letter-spacing: 5px; margin-bottom: 10px; }
-        
-        .blessings {
+        h1 { 
+            color: var(--gold); 
+            font-size: 1.6rem; 
+            letter-spacing: 2px; 
+            margin-bottom: 25px; 
+            line-height: 1.4;
+        }
+
+        h1 span {
             font-size: 1.2rem;
+            opacity: 0.85;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .guidelines {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 20px 25px;
+            border-radius: 18px;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
             line-height: 2;
-            color: var(--red);
-            margin-bottom: 40px;
-            font-weight: bold;
+            color: #555;
+            border: 1px solid rgba(184, 150, 46, 0.15);
+            /* 讓區塊整體置中，但文字內容靠左 */
+            display: inline-block;
+            text-align: left;
+            max-width: 85%;
         }
 
         #startBtn {
-            padding: 16px 60px;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            padding: 16px 65px;
+            background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%);
             color: white; 
             border: none;
             border-radius: 35px;
             font-size: 1.2rem;
             font-weight: bold;
-            box-shadow: 0 6px 20px rgba(192, 57, 43, 0.3);
+            box-shadow: 0 6px 20px rgba(184, 150, 46, 0.3);
             transition: transform 0.2s;
             cursor: pointer;
         }
@@ -98,6 +113,7 @@
         }
 
         .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card.reversed .card-back img { transform: rotate(180deg); }
 
         .card-face {
             position: absolute;
@@ -126,34 +142,36 @@
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
-            max-height: 50vh;
+            max-height: 62vh;
             background: rgba(255, 255, 255, 0.98);
             padding: 25px;
             border-radius: 25px;
-            border: 2px solid var(--red);
+            border: 1px solid var(--gold);
             display: none;
             backdrop-filter: blur(20px);
             z-index: 3000;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             box-shadow: 0 15px 40px rgba(0,0,0,0.1);
             box-sizing: border-box;
         }
 
-        .res-title { font-size: 1.5rem; color: var(--red); margin-bottom: 15px; text-align: center; font-weight: bold; }
+        .res-title { font-size: 1.5rem; color: var(--gold); margin-bottom: 8px; text-align: center; font-weight: bold; }
+        .res-pos { font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; text-align: center; letter-spacing: 2px; }
         
         #resDesc { 
-            font-size: 1.1rem; 
-            line-height: 1.6; 
+            font-size: 1.05rem; 
+            line-height: 1.8; 
             color: #444; 
-            text-align: center; 
+            text-align: left; 
             white-space: pre-wrap;
             padding: 0 5px;
         }
 
         .close-btn {
-            background: #f8f9fa; 
+            background: none; 
             border: 1px solid #ddd; 
-            color: #666; 
+            color: #999; 
             border-radius: 20px; 
             padding: 10px 30px; 
             margin-top: 25px; 
@@ -165,18 +183,25 @@
 <body>
 
     <div id="intro-ui">
-        <h1>🧧 恭賀新禧 🧧</h1>
-        <div class="blessings">
-            歲歲平安，萬事如意<br>
-            招財進寶，福氣滿門
+        <h1>
+            💰 塔羅股海明燈 💰
+            <span>照亮投資方向</span>
+        </h1>
+        <div class="guidelines">
+            <b>投資占卜須知：</b><br>
+            1. 尋找安靜空間，深呼吸三次。<br>
+            2. 鎖定您想詢問的標的或投資計畫。<br>
+            3. 準備好後點擊下方按鈕，看見市場天機。
         </div>
-        <button id="startBtn" onclick="runCeremony()">新春開運占卜</button>
+        <br>
+        <button id="startBtn" onclick="runCeremony()">開始占卜</button>
     </div>
 
     <div class="deck-container" id="deck"></div>
 
     <div id="result-panel">
         <div class="res-title" id="resName"></div>
+        <div class="res-pos" id="resPos"></div>
         <div id="resDesc"></div>
         <div style="text-align: center;">
             <button class="close-btn" onclick="location.reload()">重新占卜</button>
@@ -184,37 +209,16 @@
     </div>
 
     <script>
-        // 內建新春運勢牌意資料
-        const tarotDeckData = [
-            { n: "0 愚者", u: "新春大吉！今年是冒險的好時機，勇敢嘗試新事物將有驚喜收穫。" },
-            { n: "1 魔術師", u: "靈感湧現！開春展現才華，您的創意將轉化為實際的成功與財富。" },
-            { n: "2 女教皇", u: "心境祥和。新春宜沉潛靜心，直覺會帶領您做出最正確的開運決策。" },
-            { n: "3 女皇", u: "豐收之年！物質生活富足，家庭和睦，是個充滿愛與享受的春季。" },
-            { n: "4 皇帝", u: "事業亨通！今年將掌握主導權，憑藉毅力能建立穩固的事業版圖。" },
-            { n: "5 教皇", u: "貴人扶助！新春期間多聽長輩教導，將獲得珍貴的資源與庇佑。" },
-            { n: "6 戀人", u: "良緣降臨！人際關係如春風拂面，單身者有機會遇到理想對象。" },
-            { n: "7 戰車", u: "勢如破竹！開春即展現強大行動力，克服困難後必能達成目標。" },
-            { n: "8 力量", u: "以柔克剛。溫柔的力量能化解衝突，今年展現耐心將收獲圓滿。" },
-            { n: "9 隱者", u: "智慧進階。新春適合規劃未來，深度思考將為您點亮前進的明燈。" },
-            { n: "10 命運之輪", u: "鴻運當頭！好運即將旋轉而至，抓住變化的契機將翻轉人生。" },
-            { n: "11 正義", u: "各項計畫公平順遂。付出將得到合理回報，是個公道如意的好年。" },
-            { n: "12 倒吊人", u: "換個角度。暫時的等待是為了更好的出發，新觀點將帶來開運契機。" },
-            { n: "13 死亡", u: "除舊佈新！告別過去的不順，新的希望即將在春天萌芽重生。" },
-            { n: "14 節制", u: "身心平衡。情緒與生活調和順暢，人際溝通將如魚得水。" },
-            { n: "15 惡魔", u: "正視慾望。今年財運旺盛，但需注意理財，避免過度開銷。" },
-            { n: "16 塔", u: "破舊立新。突破瓶頸的震撼將帶來更堅固的根基，迎接新氣象。" },
-            { n: "17 星星", u: "希望無限！新春定下的目標將如星辰般閃耀，前景一片光明。" },
-            { n: "18 月亮", u: "靜待霧散。直覺敏銳，只要保持平常心，春天的迷霧終將散去。" },
-            { n: "19 太陽", u: "大放異彩！新春運勢最強勁，充滿活力與喜悅，萬事稱心如意。" },
-            { n: "20 審判", u: "好消息到！過去的努力獲得肯定，事業與生活將迎來重大轉機。" },
-            { n: "21 世界", u: "圓滿達成！今年將迎來階段性的成功，生活穩定且各方皆得意。" }
-        ];
-
         const container = document.getElementById('deck');
         const cards = [];
         let shuffledIndices = [];
 
         function init() {
+            if (typeof tarotDeckData === 'undefined') {
+                alert('找不到 tarotDeckData。請確保 data.js 檔案位於相同目錄。');
+                return;
+            }
+
             shuffledIndices = Array.from({length: 22}, (_, i) => i);
             shuffledIndices.sort(() => Math.random() - 0.5);
 
@@ -269,18 +273,23 @@
         function selectCard(card) {
             if (card.classList.contains('flipped')) return;
             
+            const isRev = Math.random() > 0.5;
             const realIndex = card.dataset.realIndex; 
             const data = tarotDeckData[realIndex];
 
             cards.forEach(c => c.style.opacity = c === card ? '1' : '0.1');
             card.style.zIndex = '2000';
             
+            if (isRev) card.classList.add('reversed');
             card.classList.add('flipped');
             card.style.transform = `translate(0, -120px) scale(2.4) rotate(0deg)`;
 
             setTimeout(() => {
                 document.getElementById('resName').innerText = data.n;
-                document.getElementById('resDesc').innerText = data.u;
+                document.getElementById('resPos').innerText = isRev ? "── 逆位 ──" : "── 正位 ──";
+                // 台灣股市邏輯：正位(紅)漲、逆位(綠)跌
+                document.getElementById('resPos').style.color = isRev ? "#00a896" : "#e63946";
+                document.getElementById('resDesc').innerText = isRev ? data.r : data.u;
                 document.getElementById('result-panel').style.display = 'block';
             }, 600);
         }
